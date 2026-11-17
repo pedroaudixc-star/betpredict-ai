@@ -30,26 +30,120 @@
   <div id="games" class="games"></div>
   <footer>BetPredict AI · As previsões são estimativas, não garantias. Não arrisques dinheiro que não podes perder.</footer>
 </main>
+<
+<script src="api.js"></script>
 <script>
-const data={
- football:[
-  {league:"Liga de demonstração · Futebol",home:"Porto",away:"Sporting",time:"A agendar",p:[42,29,29],labels:["Porto","Empate","Sporting"],note:"Exemplo ilustrativo; não corresponde a uma análise de jogo real."},
-  {league:"Liga de demonstração · Futebol",home:"Benfica",away:"Braga",time:"A agendar",p:[55,24,21],labels:["Benfica","Empate","Braga"],note:"Percentagens fictícias para demonstrar a apresentação das probabilidades."}
- ],
- basketball:[
-  {league:"Liga de demonstração · Basquetebol",home:"Equipa Azul",away:"Equipa Dourada",time:"A agendar",p:[58,42],labels:["Equipa Azul","Equipa Dourada"],note:"Exemplo ilustrativo; sem dados reais de equipas ou jogadores."},
-  {league:"Liga de demonstração · Basquetebol",home:"Equipa Norte",away:"Equipa Sul",time:"A agendar",p:[47,53],labels:["Equipa Norte","Equipa Sul"],note:"Percentagens fictícias para demonstrar a apresentação das probabilidades."}
- ]
-};
-const root=document.querySelector("#games");
-function render(sport){
- document.querySelectorAll(".tabs button").forEach(b=>b.classList.toggle("active",b.dataset.sport===sport));
- document.querySelector("#heading").textContent=sport==="football"?"Jogos de futebol":"Jogos de basquetebol";
- root.innerHTML=data[sport].map(g=>`<article class="game"><div class="league">${g.league}</div><div class="teams"><div>${g.home}</div><div class="vs">VS</div><div>${g.away}</div></div><div class="meta"><span>${g.time}</span><span class="pill">Previsão de demonstração</span></div><div class="analysis"><strong>Probabilidades ilustrativas</strong><div class="bars">${g.p.map((p,i)=>`<div class="bar ${i===1&&sport==='football'?'draw':i===2?'other':''}" style="width:${p}%"></div>`).join("")}</div><div class="muted">${g.labels.map((l,i)=>`${l}: ${g.p[i]}%`).join(" · ")}</div><p>${g.note}</p></div></article>`).join("");
+const root = document.querySelector("#games");
+const heading = document.querySelector("#heading");
+const subtitle = document.querySelector(".section-title span");
+
+function escapeHTML(value) {
+  return String(value || "").replace(/[&<>"']/g, char => ({
+    "&": "&amp;", "<": "&lt;", ">": "&gt;",
+    '"': "&quot;", "'": "&#39;"
+  }[char]));
 }
-document.querySelectorAll(".tabs button").forEach(b=>b.addEventListener("click",()=>render(b.dataset.sport)));
-render("football");
-if("serviceWorker" in navigator && location.protocol.startsWith("http")) navigator.serviceWorker.register("./sw.js").catch(()=>{});
+
+function formatDate(date, time) {
+  if (!date) return time || "Horário por confirmar";
+  const parts = date.split("-");
+  const formatted = parts.length === 3
+    ? `${parts[2]}/${parts[1]}/${parts[0]}`
+    : date;
+  return `${formatted} · ${time || "Hora por confirmar"}`;
+}
+
+function renderEvents(events, sport) {
+  if (!events.length) {
+    root.innerHTML = `
+      <p class="muted">
+        Não foram encontrados jogos desta competição para hoje.
+        Experimenta novamente mais tarde.
+      </p>`;
+    subtitle.textContent = "Sem jogos encontrados";
+    return;
+  }
+
+  subtitle.textContent = `${events.length} jogos encontrados`;
+
+  root.innerHTML = events.map(game => {
+    const home = escapeHTML(game.strHomeTeam || "Equipa da casa");
+    const away = escapeHTML(game.strAwayTeam || "Equipa visitante");
+    const league = escapeHTML(game.strLeague || "Competição");
+    const date = formatDate(game.dateEvent, game.strTime);
+    const played = game.intHomeScore !== null &&
+                   game.intHomeScore !== undefined &&
+                   game.intAwayScore !== null &&
+                   game.intAwayScore !== undefined;
+
+    return `
+      <article class="game">
+        <div class="league">${league}</div>
+        <div class="teams">
+          <div>${home}</div>
+          <div class="vs">${played
+            ? `${game.intHomeScore} - ${game.intAwayScore}`
+            : "VS"}</div>
+          <div>${away}</div>
+        </div>
+        <div class="meta">
+          <span>${escapeHTML(date)}</span>
+          <span class="pill">${played ? "Resultado" : "Jogo agendado"}</span>
+        </div>
+        <div class="analysis">
+          <strong>Dados do jogo</strong>
+          <p class="muted">
+            ${sport === "football" ? "Futebol" : "Basquetebol"} ·
+            Dados fornecidos pela TheSportsDB.
+          </p>
+          <p class="muted">
+            Ainda sem previsão de inteligência artificial.
+          </p>
+        </div>
+      </article>`;
+  }).join("");
+}
+
+async function loadSport(sport) {
+  document.querySelectorAll(".tabs button").forEach(button => {
+    button.classList.toggle("active", button.dataset.sport === sport);
+  });
+
+  heading.textContent = sport === "football"
+    ? "Jogos de futebol"
+    : "Jogos de basquetebol";
+
+  subtitle.textContent = "A procurar jogos...";
+  root.innerHTML = '<p class="muted">A carregar jogos reais...</p>';
+
+  try {
+    const events = sport === "football"
+      ? await window.BetPredictAPI.getFootballEvents()
+      : await window.BetPredictAPI.getBasketballEvents();
+
+    renderEvents(events, sport);
+  } catch (error) {
+    root.innerHTML = `
+      <p class="muted">
+        Não foi possível carregar os jogos.
+        Verifica a ligação à internet e tenta novamente.
+      </p>`;
+    subtitle.textContent = "Erro ao carregar";
+    console.error(error);
+  }
+}
+
+document.querySelectorAll(".tabs button").forEach(button => {
+  button.addEventListener("click", () => loadSport(button.dataset.sport));
+});
+
+loadSport("football");
+
+if ("serviceWorker" in navigator && location.protocol.startsWith("http")) {
+  navigator.serviceWorker.register("./sw.js").catch(() => {});
+}
 </script>
-  <script src="api.js"></script>
-</body></html>
+</body>
+</html>
+
+  
