@@ -1,0 +1,54 @@
+<!doctype html>
+<html lang="pt-PT">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <meta name="theme-color" content="#101827">
+  <meta name="description" content="BetPredict AI — resultados e análise desportiva">
+  <link rel="manifest" href="manifest.webmanifest">
+  <title>BetPredict AI</title>
+  <style>
+    :root{color-scheme:dark;--bg:#0b1220;--panel:#131e30;--panel2:#1b2940;--text:#f4f7fb;--muted:#9aa9bd;--accent:#35d39a;--line:#26354c}
+    *{box-sizing:border-box}body{margin:0;background:linear-gradient(160deg,#101c30,#080e19 60%);font:16px system-ui,-apple-system,sans-serif;color:var(--text);min-height:100vh}
+    header{padding:26px 18px 18px;max-width:850px;margin:auto} .brand{display:flex;align-items:center;gap:12px}.logo{width:44px;height:44px;border-radius:14px;background:var(--accent);color:#062218;display:grid;place-items:center;font-weight:900;font-size:20px}
+    h1{font-size:22px;margin:0}header p{color:var(--muted);margin:5px 0 0;font-size:13px}
+    main{max-width:850px;margin:auto;padding:0 16px 40px}.notice{background:#332a18;border:1px solid #6b5528;color:#f5dca4;border-radius:13px;padding:12px 14px;font-size:13px;line-height:1.45;margin-bottom:18px}
+    .tabs{display:flex;gap:8px;margin:16px 0}.tabs button,.filter{border:1px solid var(--line);background:var(--panel);color:var(--muted);padding:10px 16px;border-radius:999px;font-weight:650}
+    .tabs button.active{background:var(--accent);color:#062218;border-color:var(--accent)}.section-title{display:flex;justify-content:space-between;align-items:center;margin:22px 2px 12px}.section-title h2{font-size:17px;margin:0}.section-title span{font-size:12px;color:var(--muted)}
+    .game{background:var(--panel);border:1px solid var(--line);border-radius:17px;padding:15px;margin-bottom:11px}.league{font-size:11px;color:var(--muted);margin-bottom:13px}.teams{display:grid;grid-template-columns:1fr auto 1fr;align-items:center;gap:10px;text-align:center;font-weight:700}.vs{color:var(--muted);font-size:12px}.meta{display:flex;justify-content:space-between;gap:8px;margin-top:14px;padding-top:12px;border-top:1px solid var(--line);font-size:12px;color:var(--muted)}
+    .pill{color:var(--accent);font-weight:700}.analysis{background:var(--panel2);padding:12px;border-radius:12px;margin-top:12px;font-size:13px}.bars{display:flex;gap:5px;margin:9px 0 5px}.bar{height:8px;border-radius:8px;background:var(--accent)}.bar.draw{background:#e5b84b}.bar.other{background:#6983a8}
+    .muted{color:var(--muted)}footer{text-align:center;color:var(--muted);font-size:12px;padding:24px 8px}
+    @media(min-width:650px){.games{display:grid;grid-template-columns:1fr 1fr;gap:12px}.game{margin:0}}
+  </style>
+</head>
+<body>
+<header><div class="brand"><div class="logo">BP</div><div><h1>BetPredict AI</h1><p>Centro de resultados e análise desportiva</p></div></div></header>
+<main>
+  <div class="notice"><strong>Modo de demonstração:</strong> os jogos e percentagens apresentados são exemplos fictícios para testar a interface. Ainda não estão ligados a resultados em direto nem a um modelo de previsão real.</div>
+  <div class="tabs" role="tablist"><button class="active" data-sport="football">⚽ Futebol</button><button data-sport="basketball">🏀 Basquetebol</button></div>
+  <div class="section-title"><h2 id="heading">Jogos em destaque</h2><span>Dados de demonstração</span></div>
+  <div id="games" class="games"></div>
+  <footer>BetPredict AI · As previsões são estimativas, não garantias. Não arrisques dinheiro que não podes perder.</footer>
+</main>
+<script>
+const data={
+ football:[
+  {league:"Liga de demonstração · Futebol",home:"Porto",away:"Sporting",time:"A agendar",p:[42,29,29],labels:["Porto","Empate","Sporting"],note:"Exemplo ilustrativo; não corresponde a uma análise de jogo real."},
+  {league:"Liga de demonstração · Futebol",home:"Benfica",away:"Braga",time:"A agendar",p:[55,24,21],labels:["Benfica","Empate","Braga"],note:"Percentagens fictícias para demonstrar a apresentação das probabilidades."}
+ ],
+ basketball:[
+  {league:"Liga de demonstração · Basquetebol",home:"Equipa Azul",away:"Equipa Dourada",time:"A agendar",p:[58,42],labels:["Equipa Azul","Equipa Dourada"],note:"Exemplo ilustrativo; sem dados reais de equipas ou jogadores."},
+  {league:"Liga de demonstração · Basquetebol",home:"Equipa Norte",away:"Equipa Sul",time:"A agendar",p:[47,53],labels:["Equipa Norte","Equipa Sul"],note:"Percentagens fictícias para demonstrar a apresentação das probabilidades."}
+ ]
+};
+const root=document.querySelector("#games");
+function render(sport){
+ document.querySelectorAll(".tabs button").forEach(b=>b.classList.toggle("active",b.dataset.sport===sport));
+ document.querySelector("#heading").textContent=sport==="football"?"Jogos de futebol":"Jogos de basquetebol";
+ root.innerHTML=data[sport].map(g=>`<article class="game"><div class="league">${g.league}</div><div class="teams"><div>${g.home}</div><div class="vs">VS</div><div>${g.away}</div></div><div class="meta"><span>${g.time}</span><span class="pill">Previsão de demonstração</span></div><div class="analysis"><strong>Probabilidades ilustrativas</strong><div class="bars">${g.p.map((p,i)=>`<div class="bar ${i===1&&sport==='football'?'draw':i===2?'other':''}" style="width:${p}%"></div>`).join("")}</div><div class="muted">${g.labels.map((l,i)=>`${l}: ${g.p[i]}%`).join(" · ")}</div><p>${g.note}</p></div></article>`).join("");
+}
+document.querySelectorAll(".tabs button").forEach(b=>b.addEventListener("click",()=>render(b.dataset.sport)));
+render("football");
+if("serviceWorker" in navigator && location.protocol.startsWith("http")) navigator.serviceWorker.register("./sw.js").catch(()=>{});
+</script>
+</body></html>
