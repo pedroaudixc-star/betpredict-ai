@@ -264,9 +264,20 @@ async function getFootballPrediction(
 ) {
   const leagueText = normalizeTeam(leagueName);
 
-  const league = Object.keys(LEAGUES).find(key =>
-    leagueText.includes(key)
-  );
+const LEAGUE_ALIASES = {
+  portugal: ["portugal", "primeiraliga", "ligaportuguesa"],
+  espanha: ["espanha", "laliga"],
+  inglaterra: ["inglaterra", "premierleague"],
+  italia: ["italia", "seriea"],
+  alemanha: ["alemanha", "bundesliga"],
+  franca: ["franca", "ligue1"],
+  "paises baixos": ["paisesbaixos", "holanda", "eredivisie"]
+};
+
+const league = Object.entries(LEAGUE_ALIASES).find(
+  ([key, aliases]) =>
+    aliases.some(alias => leagueText.includes(alias))
+)?.[0];
 
   if (!league) {
     return {
