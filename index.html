@@ -166,7 +166,12 @@ function predictionHTML(prediction) {
     return `
       <div class="analysis">
         <strong>Previsão</strong>
-        <p class="muted">Dados insuficientes: ${escapeHTML(reason)}</p>
+      <p class="muted">
+  Dados insuficientes: ${escapeHTML(reason)}
+  ${Number.isFinite(prediction?.jogosCasa)
+    ? `(Casa: ${prediction.jogosCasa}/5; Fora: ${prediction.jogosFora}/5)`
+    : ""}
+</p>
       </div>`;
   }
 
