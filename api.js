@@ -62,20 +62,35 @@ async function getEvents(
 }
 
 async function getFootballEvents() {
-  const results = await Promise.all(
-    FOOTBALL_LEAGUES.map(async leagueId => {
-      try {
-        return await getEvents("Soccer", leagueId);
-      } catch (error) {
-        console.warn("Erro na liga", leagueId, error);
-        return [];
-      }
-    })
-  );
+  const allEvents = [];
+  const today = new Date();
 
-  const allEvents = results.flat();
+  // Procura jogos de hoje até aos próximos 6 dias
+  for (let day = 0; day < 7; day++) {
+    const date = new Date(today);
+    date.setDate(today.getDate() + day);
 
-  // Retira jogos repetidos
+    const dateString = [
+      date.getFullYear(),
+      String(date.getMonth() + 1).padStart(2, "0"),
+      String(date.getDate()).padStart(2, "0")
+    ].join("-");
+
+    const results = await Promise.all(
+      FOOTBALL_LEAGUES.map(async leagueId => {
+        try {
+          return await getEvents("Soccer", leagueId, dateString);
+        } catch (error) {
+          console.warn("Erro na liga", leagueId, error);
+          return [];
+        }
+      })
+    );
+
+    allEvents.push(...results.flat());
+  }
+
+  // Remove jogos repetidos
   const uniqueEvents = [];
   const seen = new Set();
 
@@ -89,18 +104,13 @@ async function getFootballEvents() {
     }
   }
 
-  // Se as consultas por liga não devolverem jogos,
-  // tenta a consulta geral do dia.
-  if (uniqueEvents.length === 0) {
-    return getEvents("Soccer");
-  }
-
   return uniqueEvents.sort((a, b) => {
     const dateA = `${a.dateEvent || ""} ${a.strTime || ""}`;
     const dateB = `${b.dateEvent || ""} ${b.strTime || ""}`;
     return dateA.localeCompare(dateB);
   });
 }
+
 
 async function getBasketballEvents() {
   return getEvents("Basketball");
