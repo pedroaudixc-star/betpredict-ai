@@ -262,22 +262,24 @@ async function getFootballPrediction(
   leagueName,
   matchDate = getToday()
 ) {
+  
   const leagueText = normalizeTeam(leagueName);
 
-const LEAGUE_ALIASES = {
-  portugal: ["portugal", "primeiraliga", "ligaportuguesa"],
-  espanha: ["espanha", "laliga"],
-  inglaterra: ["inglaterra", "premierleague"],
-  italia: ["italia", "seriea"],
-  alemanha: ["alemanha", "bundesliga"],
-  franca: ["franca", "ligue1"],
-  "paises baixos": ["paisesbaixos", "holanda", "eredivisie"]
-};
-
-const league = Object.entries(LEAGUE_ALIASES).find(
-  ([key, aliases]) =>
-    aliases.some(alias => leagueText.includes(alias))
-)?.[0];
+  const LEAGUE_ALIASES = {
+    portugal: ["portugal", "primeiraliga", "ligaportuguesa"],
+    espanha: ["espanha", "laliga"],
+    inglaterra: ["inglaterra", "premierleague"],
+    italia: ["italia", "seriea"],
+    alemanha: ["alemanha", "bundesliga"],
+    franca: ["franca", "ligue1"],
+    "paises baixos": ["paisesbaixos", "holanda", "eredivisie"],
+    champions: ["championsleague", "uefachampionsleague"],
+    europa: ["europaleague", "uefaeuropaleague"]
+  };
+ const league = Object.entries(LEAGUE_ALIASES).find(
+    ([key, aliases]) =>
+      aliases.some(alias => leagueText.includes(alias))
+  )?.[0];
 
   if (!league) {
     return {
@@ -288,10 +290,15 @@ const league = Object.entries(LEAGUE_ALIASES).find(
 
   const seasons = await loadFootballHistory();
 
-  const matches = seasons
+let matches;
+
+if (league === "champions" || league === "europa") {
+  matches = seasons.flatMap(item => item.matches);
+} else {
+  matches = seasons
     .filter(item => item.league === league)
     .flatMap(item => item.matches);
-
+}
   const homeHistory = getTeamHistory(
     matches,
     homeTeam,
