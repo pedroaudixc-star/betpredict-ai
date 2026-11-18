@@ -20,7 +20,11 @@ const FOOTBALL_LEAGUES = [
   4335, // Espanha
   4328, // Inglaterra
   4332, // Itália
-  4331  // Alemanha
+  4331, // Alemanha
+  4334, // França
+  4338, // Países Baixos
+  4480, // Champions League
+  4481  // Europa League
 ];
 
 let historyCache = null;
