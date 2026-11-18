@@ -180,7 +180,7 @@ function sameTeam(a, b) {
     deportivolacoruna: ["rcdeportivolacoruna", "deportivoacoruna", "deportivoacorunha"],
     manchesterunited: ["manutd", "manunited"],
     manchestercity: ["mancity"],
-    paris: ["psg", "parissaintgermain"],
+   paris: ["psg", "parissg", "parissaintgermain"],
     inter: ["intermilan"],
     atletico: ["atleticodemadrid"],
     bayern: ["bayernmunich"],
