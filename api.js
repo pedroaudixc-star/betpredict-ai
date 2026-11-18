@@ -11,7 +11,9 @@ const LEAGUES = {
   espanha: "es.1",
   inglaterra: "en.1",
   italia: "it.1",
-  alemanha: "de.1"
+  alemanha: "de.1",
+  franca: "fr.1",
+  "paises baixos": "nl.1"
 };
 
 // Identificadores das ligas na TheSportsDB
