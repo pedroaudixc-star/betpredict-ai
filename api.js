@@ -18,14 +18,32 @@ async function getEvents(sport) {
 
   const response = await fetch(url);
 
-  if (!response.ok) {
-    throw new Error("Erro na ligação à TheSportsDB: " + response.status);
+async function getEvents(sport) {
+  const date = getToday();
+
+  const url =
+    `${API_BASE}/eventsday.php?d=${date}&s=${encodeURIComponent(sport)}`;
+
+  try {
+    const response = await fetch(url);
+
+    if (!response.ok) {
+      throw new Error("Erro HTTP: " + response.status);
+    }
+
+    const data = await response.json();
+
+    console.log("Desporto:", sport);
+    console.log("Resposta da API:", data);
+
+    return Array.isArray(data.events) ? data.events : [];
+
+  } catch (error) {
+    console.error("Erro ao consultar a API:", error);
+    throw error;
   }
-
-  const data = await response.json();
-
-  return Array.isArray(data.events) ? data.events : [];
 }
+
 
 async function getFootballEvents() {
   return getEvents("Soccer");
