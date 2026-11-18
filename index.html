@@ -106,25 +106,45 @@ function formatDate(date, time) {
 
 // Traduz os nomes das competições para as chaves usadas no histórico
 function identifyLeague(name) {
-  const value = String(name || "").toLowerCase();
+  const value = String(name || "")
+    .toLowerCase()
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .replace(/[^a-z0-9]/g, "");
+
+  if (value.includes("championsleague")) {
+    return "champions";
+  }
+
+  if (value.includes("europaleague")) {
+    return "europa";
+  }
+
+  if (value.includes("conferenceleague")) {
+    return "europa";
+  }
 
   if (value.includes("primeira") || value.includes("portugal")) {
     return "portugal";
   }
 
-  if (value.includes("la liga") || value.includes("laliga") ||
-      value.includes("spanish")) {
+  if (value.includes("laliga") || value.includes("spanish")) {
     return "espanha";
   }
 
-  if (value.includes("premier league") || value.includes("england") ||
-      value.includes("english")) {
-    return "inglaterra";
-  }
-
-  if (value.includes("serie a") || value.includes("italy") ||
+  if (value.includes("seriea") || value.includes("italy") ||
       value.includes("italian")) {
     return "italia";
+  }
+
+  if (value.includes("ligue1") || value.includes("france") ||
+      value.includes("french")) {
+    return "franca";
+  }
+
+  if (value.includes("premierleague") || value.includes("england") ||
+      value.includes("english")) {
+    return "inglaterra";
   }
 
   if (value.includes("bundesliga") || value.includes("germany") ||
@@ -132,9 +152,13 @@ function identifyLeague(name) {
     return "alemanha";
   }
 
+  if (value.includes("eredivisie") || value.includes("netherlands") ||
+      value.includes("dutch")) {
+    return "paises baixos";
+  }
+
   return null;
 }
-
 function predictionHTML(prediction) {
   if (!prediction || prediction.status !== "Previsão estatística") {
     const reason = prediction?.reason || "Ainda não existem dados suficientes.";
