@@ -232,14 +232,21 @@ function getFinalScore(match) {
   return [Number(score[0]), Number(score[1])];
 }
 
+
 function getTeamHistory(matches, team, beforeDate) {
   const results = [];
 
+  let jogosAntesDaData = 0;
+  let resultadosValidos = 0;
+  let equipaEncontrada = 0;
+
   for (const match of matches) {
     if (!match.date || match.date >= beforeDate) continue;
+    jogosAntesDaData++;
 
     const score = getFinalScore(match);
     if (!score) continue;
+    resultadosValidos++;
 
     let goalsFor;
     let goalsAgainst;
@@ -254,12 +261,21 @@ function getTeamHistory(matches, team, beforeDate) {
       continue;
     }
 
+    equipaEncontrada++;
+
     results.push({
       date: match.date,
       goalsFor,
       goalsAgainst
     });
   }
+
+  results.debug = {
+    total: matches.length,
+    antesDaData: jogosAntesDaData,
+    resultadosValidos,
+    equipaEncontrada
+  };
 
   return results
     .sort((a, b) => b.date.localeCompare(a.date))
