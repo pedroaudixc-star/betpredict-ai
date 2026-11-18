@@ -14,6 +14,15 @@ const LEAGUES = {
   alemanha: "de.1"
 };
 
+// Identificadores das ligas na TheSportsDB
+const FOOTBALL_LEAGUES = [
+  4344, // Portugal
+  4335, // Espanha
+  4328, // Inglaterra
+  4332, // Itália
+  4331  // Alemanha
+];
+
 let historyCache = null;
 
 function getToday() {
@@ -25,13 +34,15 @@ function getToday() {
   return `${year}-${month}-${day}`;
 }
 
-// JOGOS DO DIA
-
-async function getEvents(sport) {
+async function getEvents(sport, leagueId = null) {
   const date = getToday();
 
-  const url =
+  let url =
     `${API_BASE}/eventsday.php?d=${date}&s=${encodeURIComponent(sport)}`;
+
+  if (leagueId) {
+    url += `&l=${leagueId}`;
+  }
 
   const response = await fetch(url);
 
@@ -45,7 +56,44 @@ async function getEvents(sport) {
 }
 
 async function getFootballEvents() {
-  return getEvents("Soccer");
+  const results = await Promise.all(
+    FOOTBALL_LEAGUES.map(async leagueId => {
+      try {
+        return await getEvents("Soccer", leagueId);
+      } catch (error) {
+        console.warn("Erro na liga", leagueId, error);
+        return [];
+      }
+    })
+  );
+
+  const allEvents = results.flat();
+
+  // Retira jogos repetidos
+  const uniqueEvents = [];
+  const seen = new Set();
+
+  for (const event of allEvents) {
+    const key = event.idEvent ||
+      `${event.dateEvent}-${event.strHomeTeam}-${event.strAwayTeam}`;
+
+    if (!seen.has(key)) {
+      seen.add(key);
+      uniqueEvents.push(event);
+    }
+  }
+
+  // Se as consultas por liga não devolverem jogos,
+  // tenta a consulta geral do dia.
+  if (uniqueEvents.length === 0) {
+    return getEvents("Soccer");
+  }
+
+  return uniqueEvents.sort((a, b) => {
+    const dateA = `${a.dateEvent || ""} ${a.strTime || ""}`;
+    const dateB = `${b.dateEvent || ""} ${b.strTime || ""}`;
+    return dateA.localeCompare(dateB);
+  });
 }
 
 async function getBasketballEvents() {
@@ -64,8 +112,6 @@ async function getAllEvents() {
     updatedAt: new Date().toISOString()
   };
 }
-
-// RESULTADOS HISTÓRICOS
 
 async function loadFootballHistory() {
   if (historyCache) return historyCache;
@@ -105,8 +151,6 @@ async function loadFootballHistory() {
   return historyCache;
 }
 
-// NORMALIZAR NOMES DAS EQUIPAS
-
 function normalizeTeam(name) {
   return String(name || "")
     .normalize("NFD")
@@ -129,8 +173,6 @@ function sameTeam(a, b) {
   );
 }
 
-// LER RESULTADOS FINAIS
-
 function getFinalScore(match) {
   if (!match.score) return null;
 
@@ -151,8 +193,6 @@ function getFinalScore(match) {
 
   return [Number(score[0]), Number(score[1])];
 }
-
-// ÚLTIMOS JOGOS DE UMA EQUIPA
 
 function getTeamHistory(matches, team, beforeDate) {
   const results = [];
@@ -188,8 +228,6 @@ function getTeamHistory(matches, team, beforeDate) {
     .slice(0, 10);
 }
 
-// DISTRIBUIÇÃO DE POISSON
-
 function poisson(lambda, goals) {
   let probability = Math.exp(-lambda);
 
@@ -199,8 +237,6 @@ function poisson(lambda, goals) {
 
   return probability;
 }
-
-// PREVISÃO ESTATÍSTICA DE FUTEBOL
 
 async function getFootballPrediction(
   homeTeam,
@@ -261,7 +297,6 @@ async function getFootballPrediction(
   const home = averages(homeHistory);
   const away = averages(awayHistory);
 
-  // Estimativa de golos esperados
   const expectedHome = Math.min(
     4.5,
     Math.max(0.2, ((home.scored + away.conceded) / 2) * 1.08)
@@ -301,8 +336,6 @@ async function getFootballPrediction(
     golosEsperadosFora: Number(expectedAway.toFixed(2))
   };
 }
-
-// DISPONIBILIZAR FUNÇÕES À APLICAÇÃO
 
 window.BetPredictAPI = {
   getFootballEvents,
