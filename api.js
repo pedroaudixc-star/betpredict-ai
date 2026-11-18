@@ -243,7 +243,7 @@ function getTeamHistory(matches, team, beforeDate) {
 
   return results
     .sort((a, b) => b.date.localeCompare(a.date))
-    .slice(0, 10);
+    .slice(0, 15);
 }
 
 function poisson(lambda, goals) {
