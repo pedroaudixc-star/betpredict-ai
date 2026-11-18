@@ -169,6 +169,37 @@ async function loadFootballHistory() {
   return historyCache;
 }
 
+function sameTeam(a, b) {
+  const first = normalizeTeam(a);
+  const second = normalizeTeam(b);
+
+  if (!first || !second) return false;
+  if (first === second) return true;
+
+  const aliases = {
+    manchesterunited: ["manutd", "manunited"],
+    manchestercity: ["mancity"],
+    paris: ["psg", "parissaintgermain"],
+    inter: ["intermilan"],
+    atletico: ["atleticodemadrid"],
+    bayern: ["bayernmunich"],
+    ajax: ["afcajax"]
+  };
+
+  for (const [main, variants] of Object.entries(aliases)) {
+    const all = [main, ...variants];
+
+    if (all.includes(first) && all.includes(second)) {
+      return true;
+    }
+  }
+
+  return (
+    Math.min(first.length, second.length) >= 5 &&
+    (first.includes(second) || second.includes(first))
+  );
+}
+
 function normalizeTeam(name) {
   return String(name || "")
     .normalize("NFD")
@@ -178,18 +209,6 @@ function normalizeTeam(name) {
     .replace(/[^a-z0-9]/g, "");
 }
 
-function sameTeam(a, b) {
-  const first = normalizeTeam(a);
-  const second = normalizeTeam(b);
-
-  if (!first || !second) return false;
-  if (first === second) return true;
-
-  return (
-    Math.min(first.length, second.length) >= 5 &&
-    (first.includes(second) || second.includes(first))
-  );
-}
 
 function getFinalScore(match) {
   if (!match.score) return null;
