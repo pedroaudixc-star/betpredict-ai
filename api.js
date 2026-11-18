@@ -38,9 +38,11 @@ function getToday() {
   return `${year}-${month}-${day}`;
 }
 
-async function getEvents(sport, leagueId = null) {
-  const date = getToday();
-
+async function getEvents(
+  sport,
+  leagueId = null,
+  date = getToday()
+) {
   let url =
     `${API_BASE}/eventsday.php?d=${date}&s=${encodeURIComponent(sport)}`;
 
