@@ -177,6 +177,7 @@ function sameTeam(a, b) {
   if (first === second) return true;
 
   const aliases = {
+    deportivolacoruna: ["rcdeportivolacoruna", "deportivoacoruna", "deportivoacorunha"],
     manchesterunited: ["manutd", "manunited"],
     manchestercity: ["mancity"],
     paris: ["psg", "parissaintgermain"],
