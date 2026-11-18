@@ -1,3 +1,4 @@
+
 <!doctype html>
 <html lang="pt-PT">
 <head>
@@ -9,27 +10,78 @@
   <title>BetPredict AI</title>
   <style>
     :root{color-scheme:dark;--bg:#0b1220;--panel:#131e30;--panel2:#1b2940;--text:#f4f7fb;--muted:#9aa9bd;--accent:#35d39a;--line:#26354c}
-    *{box-sizing:border-box}body{margin:0;background:linear-gradient(160deg,#101c30,#080e19 60%);font:16px system-ui,-apple-system,sans-serif;color:var(--text);min-height:100vh}
-    header{padding:26px 18px 18px;max-width:850px;margin:auto} .brand{display:flex;align-items:center;gap:12px}.logo{width:44px;height:44px;border-radius:14px;background:var(--accent);color:#062218;display:grid;place-items:center;font-weight:900;font-size:20px}
-    h1{font-size:22px;margin:0}header p{color:var(--muted);margin:5px 0 0;font-size:13px}
-    main{max-width:850px;margin:auto;padding:0 16px 40px}.notice{background:#332a18;border:1px solid #6b5528;color:#f5dca4;border-radius:13px;padding:12px 14px;font-size:13px;line-height:1.45;margin-bottom:18px}
-    .tabs{display:flex;gap:8px;margin:16px 0}.tabs button,.filter{border:1px solid var(--line);background:var(--panel);color:var(--muted);padding:10px 16px;border-radius:999px;font-weight:650}
-    .tabs button.active{background:var(--accent);color:#062218;border-color:var(--accent)}.section-title{display:flex;justify-content:space-between;align-items:center;margin:22px 2px 12px}.section-title h2{font-size:17px;margin:0}.section-title span{font-size:12px;color:var(--muted)}
-    .game{background:var(--panel);border:1px solid var(--line);border-radius:17px;padding:15px;margin-bottom:11px}.league{font-size:11px;color:var(--muted);margin-bottom:13px}.teams{display:grid;grid-template-columns:1fr auto 1fr;align-items:center;gap:10px;text-align:center;font-weight:700}.vs{color:var(--muted);font-size:12px}.meta{display:flex;justify-content:space-between;gap:8px;margin-top:14px;padding-top:12px;border-top:1px solid var(--line);font-size:12px;color:var(--muted)}
-    .pill{color:var(--accent);font-weight:700}.analysis{background:var(--panel2);padding:12px;border-radius:12px;margin-top:12px;font-size:13px}.bars{display:flex;gap:5px;margin:9px 0 5px}.bar{height:8px;border-radius:8px;background:var(--accent)}.bar.draw{background:#e5b84b}.bar.other{background:#6983a8}
-    .muted{color:var(--muted)}footer{text-align:center;color:var(--muted);font-size:12px;padding:24px 8px}
+    *{box-sizing:border-box}
+    body{margin:0;background:linear-gradient(160deg,#101c30,#080e19 60%);font:16px system-ui,-apple-system,sans-serif;color:var(--text);min-height:100vh}
+    header{padding:26px 18px 18px;max-width:850px;margin:auto}
+    .brand{display:flex;align-items:center;gap:12px}
+    .logo{width:44px;height:44px;border-radius:14px;background:var(--accent);color:#062218;display:grid;place-items:center;font-weight:900;font-size:20px}
+    h1{font-size:22px;margin:0}
+    header p{color:var(--muted);margin:5px 0 0;font-size:13px}
+    main{max-width:850px;margin:auto;padding:0 16px 40px}
+    .notice{background:#172b29;border:1px solid #285b4c;color:#b9f2dc;border-radius:13px;padding:12px 14px;font-size:13px;line-height:1.45;margin-bottom:18px}
+    .tabs{display:flex;gap:8px;margin:16px 0}
+    .tabs button{border:1px solid var(--line);background:var(--panel);color:var(--muted);padding:10px 16px;border-radius:999px;font-weight:650}
+    .tabs button.active{background:var(--accent);color:#062218;border-color:var(--accent)}
+    .section-title{display:flex;justify-content:space-between;align-items:center;margin:22px 2px 12px}
+    .section-title h2{font-size:17px;margin:0}
+    .section-title span{font-size:12px;color:var(--muted)}
+    .game{background:var(--panel);border:1px solid var(--line);border-radius:17px;padding:15px;margin-bottom:11px}
+    .league{font-size:11px;color:var(--muted);margin-bottom:13px}
+    .teams{display:grid;grid-template-columns:1fr auto 1fr;align-items:center;gap:10px;text-align:center;font-weight:700}
+    .vs{color:var(--muted);font-size:12px}
+    .meta{display:flex;justify-content:space-between;gap:8px;margin-top:14px;padding-top:12px;border-top:1px solid var(--line);font-size:12px;color:var(--muted)}
+    .pill{color:var(--accent);font-weight:700}
+    .analysis{background:var(--panel2);padding:12px;border-radius:12px;margin-top:12px;font-size:13px}
+    .analysis p{margin:7px 0}
+    .bars{display:flex;gap:4px;margin:10px 0 7px;height:9px}
+    .bar{height:9px;border-radius:8px;background:var(--accent)}
+    .bar.draw{background:#e5b84b}
+    .bar.other{background:#6983a8}
+    .percentages{display:grid;grid-template-columns:repeat(3,1fr);gap:7px;text-align:center}
+    .percentages div{background:#101a2a;border-radius:9px;padding:8px 3px}
+    .percentages strong{display:block;font-size:17px}
+    .percentages small{font-size:10px;color:var(--muted)}
+    .muted{color:var(--muted)}
+    footer{text-align:center;color:var(--muted);font-size:12px;padding:24px 8px}
     @media(min-width:650px){.games{display:grid;grid-template-columns:1fr 1fr;gap:12px}.game{margin:0}}
   </style>
 </head>
 <body>
-<header><div class="brand"><div class="logo">BP</div><div><h1>BetPredict AI</h1><p>Centro de resultados e análise desportiva</p></div></div></header>
+<header>
+  <div class="brand">
+    <div class="logo">BP</div>
+    <div>
+      <h1>BetPredict AI</h1>
+      <p>Centro de resultados e análise desportiva</p>
+    </div>
+  </div>
+</header>
+
 <main>
-  <div class="notice"><strong>Modo de demonstração:</strong> os jogos e percentagens apresentados são exemplos fictícios para testar a interface. Ainda não estão ligados a resultados em direto nem a um modelo de previsão real.</div>
-  <div class="tabs" role="tablist"><button class="active" data-sport="football">⚽ Futebol</button><button data-sport="basketball">🏀 Basquetebol</button></div>
-  <div class="section-title"><h2 id="heading">Jogos em destaque</h2><span>Dados de demonstração</span></div>
+  <div class="notice">
+    <strong>BetPredict AI:</strong>
+    jogos consultados através da TheSportsDB.
+    As previsões de futebol são estimativas estatísticas baseadas nos resultados históricos disponíveis.
+  </div>
+
+  <div class="tabs" role="tablist">
+    <button class="active" data-sport="football">⚽ Futebol</button>
+    <button data-sport="basketball">🏀 Basquetebol</button>
+  </div>
+
+  <div class="section-title">
+    <h2 id="heading">Jogos de futebol</h2>
+    <span>À procura de jogos...</span>
+  </div>
+
   <div id="games" class="games"></div>
-  <footer>BetPredict AI · As previsões são estimativas, não garantias. Não arrisques dinheiro que não podes perder.</footer>
+
+  <footer>
+    BetPredict AI · As previsões são estimativas, não garantias.
+    Não arrisques dinheiro que não podes perder.
+  </footer>
 </main>
+
 <script src="api.js"></script>
 <script>
 const root = document.querySelector("#games");
@@ -37,26 +89,194 @@ const heading = document.querySelector("#heading");
 const subtitle = document.querySelector(".section-title span");
 
 function escapeHTML(value) {
-  return String(value || "").replace(/[&<>"']/g, char => ({
-    "&": "&amp;", "<": "&lt;", ">": "&gt;",
-    '"': "&quot;", "'": "&#39;"
+  return String(value ?? "").replace(/[&<>"']/g, char => ({
+    "&": "&amp;",
+    "<": "&lt;",
+    ">": "&gt;",
+    '"': "&quot;",
+    "'": "&#39;"
   }[char]));
 }
 
 function formatDate(date, time) {
   if (!date) return time || "Horário por confirmar";
+
   const parts = date.split("-");
   const formatted = parts.length === 3
     ? `${parts[2]}/${parts[1]}/${parts[0]}`
     : date;
+
   return `${formatted} · ${time || "Hora por confirmar"}`;
 }
 
-function renderEvents(events, sport) {
+// Traduz os nomes das competições para as chaves usadas no histórico
+function identifyLeague(name) {
+  const value = String(name || "").toLowerCase();
+
+  if (value.includes("primeira") || value.includes("portugal")) {
+    return "portugal";
+  }
+
+  if (value.includes("la liga") || value.includes("laliga") ||
+      value.includes("spanish")) {
+    return "espanha";
+  }
+
+  if (value.includes("premier league") || value.includes("england") ||
+      value.includes("english")) {
+    return "inglaterra";
+  }
+
+  if (value.includes("serie a") || value.includes("italy") ||
+      value.includes("italian")) {
+    return "italia";
+  }
+
+  if (value.includes("bundesliga") || value.includes("germany") ||
+      value.includes("german")) {
+    return "alemanha";
+  }
+
+  return null;
+}
+
+function predictionHTML(prediction) {
+  if (!prediction || prediction.status !== "Previsão estatística") {
+    const reason = prediction?.reason || "Ainda não existem dados suficientes.";
+
+    return `
+      <div class="analysis">
+        <strong>Previsão</strong>
+        <p class="muted">Dados insuficientes: ${escapeHTML(reason)}</p>
+      </div>`;
+  }
+
+  return `
+    <div class="analysis">
+      <strong>Probabilidades estimadas</strong>
+      <div class="bars">
+        <div class="bar" style="width:${prediction.casa}%"></div>
+        <div class="bar draw" style="width:${prediction.empate}%"></div>
+        <div class="bar other" style="width:${prediction.fora}%"></div>
+      </div>
+      <div class="percentages">
+        <div>
+          <strong>${prediction.casa}%</strong>
+          <small>Vitória casa</small>
+        </div>
+        <div>
+          <strong>${prediction.empate}%</strong>
+          <small>Empate</small>
+        </div>
+        <div>
+          <strong>${prediction.fora}%</strong>
+          <small>Vitória fora</small>
+        </div>
+      </div>
+      <p class="muted">
+        Baseado em ${prediction.jogosCasa} jogos da equipa da casa
+        e ${prediction.jogosFora} da visitante.
+      </p>
+      <p class="muted">
+        Modelo estatístico experimental. Não é uma garantia de resultado.
+      </p>
+    </div>`;
+}
+
+async function renderFootballGame(game) {
+  const homeRaw = game.strHomeTeam || "Equipa da casa";
+  const awayRaw = game.strAwayTeam || "Equipa visitante";
+  const leagueRaw = game.strLeague || "Competição";
+
+  const home = escapeHTML(homeRaw);
+  const away = escapeHTML(awayRaw);
+  const league = escapeHTML(leagueRaw);
+
+  const played =
+    game.intHomeScore !== null &&
+    game.intHomeScore !== undefined &&
+    game.intAwayScore !== null &&
+    game.intAwayScore !== undefined;
+
+  const leagueKey = identifyLeague(leagueRaw);
+
+  let prediction = null;
+
+  if (leagueKey && window.BetPredictAPI?.getFootballPrediction) {
+    try {
+      prediction = await window.BetPredictAPI.getFootballPrediction(
+        homeRaw,
+        awayRaw,
+        leagueKey,
+        game.dateEvent || new Date().toISOString().slice(0, 10)
+      );
+    } catch (error) {
+      console.error("Erro na previsão:", error);
+    }
+  } else {
+    prediction = {
+      status: "Dados insuficientes",
+      reason: "Competição ainda não suportada pelo histórico"
+    };
+  }
+
+  return `
+    <article class="game">
+      <div class="league">${league}</div>
+      <div class="teams">
+        <div>${home}</div>
+        <div class="vs">${played
+          ? `${escapeHTML(game.intHomeScore)} - ${escapeHTML(game.intAwayScore)}`
+          : "VS"}</div>
+        <div>${away}</div>
+      </div>
+      <div class="meta">
+        <span>${escapeHTML(formatDate(game.dateEvent, game.strTime))}</span>
+        <span class="pill">${played ? "Resultado" : "Jogo agendado"}</span>
+      </div>
+      ${predictionHTML(prediction)}
+    </article>`;
+}
+
+function renderBasketballGame(game) {
+  const home = escapeHTML(game.strHomeTeam || "Equipa da casa");
+  const away = escapeHTML(game.strAwayTeam || "Equipa visitante");
+  const league = escapeHTML(game.strLeague || "Competição");
+
+  const played =
+    game.intHomeScore !== null &&
+    game.intHomeScore !== undefined &&
+    game.intAwayScore !== null &&
+    game.intAwayScore !== undefined;
+
+  return `
+    <article class="game">
+      <div class="league">${league}</div>
+      <div class="teams">
+        <div>${home}</div>
+        <div class="vs">${played
+          ? `${escapeHTML(game.intHomeScore)} - ${escapeHTML(game.intAwayScore)}`
+          : "VS"}</div>
+        <div>${away}</div>
+      </div>
+      <div class="meta">
+        <span>${escapeHTML(formatDate(game.dateEvent, game.strTime))}</span>
+        <span class="pill">${played ? "Resultado" : "Jogo agendado"}</span>
+      </div>
+      <div class="analysis">
+        <strong>Basquetebol</strong>
+        <p class="muted">
+          Ainda não existe um modelo histórico de previsão de basquetebol ligado.
+        </p>
+      </div>
+    </article>`;
+}
+
+async function renderEvents(events, sport) {
   if (!events.length) {
     root.innerHTML = `
       <p class="muted">
-        Não foram encontrados jogos desta competição para hoje.
+        Não foram encontrados jogos para hoje.
         Experimenta novamente mais tarde.
       </p>`;
     subtitle.textContent = "Sem jogos encontrados";
@@ -64,43 +284,14 @@ function renderEvents(events, sport) {
   }
 
   subtitle.textContent = `${events.length} jogos encontrados`;
+  root.innerHTML = '<p class="muted">A preparar os jogos e previsões...</p>';
 
-  root.innerHTML = events.map(game => {
-    const home = escapeHTML(game.strHomeTeam || "Equipa da casa");
-    const away = escapeHTML(game.strAwayTeam || "Equipa visitante");
-    const league = escapeHTML(game.strLeague || "Competição");
-    const date = formatDate(game.dateEvent, game.strTime);
-    const played = game.intHomeScore !== null &&
-                   game.intHomeScore !== undefined &&
-                   game.intAwayScore !== null &&
-                   game.intAwayScore !== undefined;
-
-    return `
-      <article class="game">
-        <div class="league">${league}</div>
-        <div class="teams">
-          <div>${home}</div>
-          <div class="vs">${played
-            ? `${game.intHomeScore} - ${game.intAwayScore}`
-            : "VS"}</div>
-          <div>${away}</div>
-        </div>
-        <div class="meta">
-          <span>${escapeHTML(date)}</span>
-          <span class="pill">${played ? "Resultado" : "Jogo agendado"}</span>
-        </div>
-        <div class="analysis">
-          <strong>Dados do jogo</strong>
-          <p class="muted">
-            ${sport === "football" ? "Futebol" : "Basquetebol"} ·
-            Dados fornecidos pela TheSportsDB.
-          </p>
-          <p class="muted">
-            Ainda sem previsão de inteligência artificial.
-          </p>
-        </div>
-      </article>`;
-  }).join("");
+  if (sport === "football") {
+    const cards = await Promise.all(events.map(renderFootballGame));
+    root.innerHTML = cards.join("");
+  } else {
+    root.innerHTML = events.map(renderBasketballGame).join("");
+  }
 }
 
 async function loadSport(sport) {
@@ -120,7 +311,7 @@ async function loadSport(sport) {
       ? await window.BetPredictAPI.getFootballEvents()
       : await window.BetPredictAPI.getBasketballEvents();
 
-    renderEvents(events, sport);
+    await renderEvents(events, sport);
   } catch (error) {
     root.innerHTML = `
       <p class="muted">
@@ -144,5 +335,3 @@ if ("serviceWorker" in navigator && location.protocol.startsWith("http")) {
 </script>
 </body>
 </html>
-
-  
