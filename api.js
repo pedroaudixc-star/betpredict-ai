@@ -374,16 +374,25 @@ if (league === "champions" || league === "europa") {
     matchDate
   );
 
-  if (homeHistory.length < 5 || awayHistory.length < 5) {
-    return {
-      status: "Dados insuficientes",
-      reason: "Faltam pelo menos cinco jogos anteriores por equipa",
-      jogosCasa: homeHistory.length,
-      jogosFora: awayHistory.length
-    };
-  }
+  
+if (homeHistory.length < 5 || awayHistory.length < 5) {
+  return {
+    status: "Dados insuficientes",
+    reason:
+      `Casa — total: ${homeHistory.debug.total}, ` +
+      `antes da data: ${homeHistory.debug.antesDaData}, ` +
+      `resultados válidos: ${homeHistory.debug.resultadosValidos}, ` +
+      `equipa encontrada: ${homeHistory.debug.equipaEncontrada}. ` +
+      `Fora — total: ${awayHistory.debug.total}, ` +
+      `antes da data: ${awayHistory.debug.antesDaData}, ` +
+      `resultados válidos: ${awayHistory.debug.resultadosValidos}, ` +
+      `equipa encontrada: ${awayHistory.debug.equipaEncontrada}.`,
+    jogosCasa: homeHistory.length,
+    jogosFora: awayHistory.length
+  };
+}
 
-  function averages(history) {
+function averages(history) {
     return {
       scored: history.reduce((sum, game) =>
         sum + game.goalsFor, 0) / history.length,
