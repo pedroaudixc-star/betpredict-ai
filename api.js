@@ -232,7 +232,6 @@ function getFinalScore(match) {
   return [Number(score[0]), Number(score[1])];
 }
 
-
 function getTeamHistory(matches, team, beforeDate) {
   const results = [];
 
@@ -248,8 +247,36 @@ function getTeamHistory(matches, team, beforeDate) {
     if (!score) continue;
     resultadosValidos++;
 
-    let goalsFor;
-    let goalsAgainst;
+    if (sameTeam(match.team1, team)) {
+      results.push({
+        date: match.date,
+        goalsFor: score[0],
+        goalsAgainst: score[1]
+      });
+      equipaEncontrada++;
+    } else if (sameTeam(match.team2, team)) {
+      results.push({
+        date: match.date,
+        goalsFor: score[1],
+        goalsAgainst: score[0]
+      });
+      equipaEncontrada++;
+    }
+  }
+
+  const history = results
+    .sort((a, b) => b.date.localeCompare(a.date))
+    .slice(0, 15);
+
+  history.debug = {
+    total: matches.length,
+    antesDaData: jogosAntesDaData,
+    resultadosValidos,
+    equipaEncontrada
+  };
+
+  return history;
+}
 
     if (sameTeam(match.team1, team)) {
       goalsFor = score[0];
